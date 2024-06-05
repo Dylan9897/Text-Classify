@@ -25,9 +25,7 @@ def read_file(file):
 
 def get_data(file):
     df = read_file(file)
-    X_train,X_test,y_train,y_test = train_test_split(df['contents'],df['tag'],test_size=0.05,stratify=df['tag']) 
-    # X_train = [token(str(x)) for x in X_train]
-    # X_test = [token(str(x)) for x in X_test]
+    X_train,X_test,y_train,y_test = train_test_split(df['contents'],df['tag'],test_size=0.05,stratify=df['tag'])
     return X_train,X_test,y_train,y_test
 
 

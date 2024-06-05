@@ -12,26 +12,24 @@ from utils.converter import Converter
 import matplotlib.pyplot as plt
 
 class Model():
-    def __init__(self):
+    def __init__(self,num_class):
         self.param = {
         'objective':'multi:softmax',
         # 'objective': 'multi:softprob',
-        'num_class':2,
+        'num_class':num_class,
         'eta':0.1,
         'booster':'gbtree',
-        'max_depth':1200,
+        'max_depth':200,
         # 'verbosity':3,
         'silent':5,
         'nthread':4
         }
-        self.num_round = 1000
+        self.num_round = 500
         self.convert = Converter()
 
     def train(self,xtrain,ytrain,xvalid,yvalid):
-        traindata = self.convert.tfvectorize(xtrain)
-        validdata = self.convert.tfvectorize(xvalid,test=True)
-        xg_train = xgb.DMatrix(traindata, label=ytrain)
-        xg_valid = xgb.DMatrix(validdata, label=yvalid)
+        xg_train = xgb.DMatrix(xtrain, label=ytrain)
+        xg_valid = xgb.DMatrix(xvalid, label=yvalid)
         dataList = [(xg_train, 'train'),(xg_valid,'valid')]
         bst = xgb.train(self.param,  # 参数
                         xg_train,  # 训练数据
@@ -40,8 +38,7 @@ class Model():
         return bst
 
     def test(self,xtest,clf):
-        testdata = self.convert.tfvectorize(xtest,test=True)
-        xg_test = xgb.DMatrix(testdata)
+        xg_test = xgb.DMatrix(xtest)
         pred = clf.predict(xg_test)
         return pred
 
@@ -65,7 +62,7 @@ class Model():
         plt.ylabel('True Positive Rate')
         plt.plot(lr_fpr, lr_tpr)
         plt.savefig('conf/roc.jpg')
-        # plt.show()
+
 
 
 

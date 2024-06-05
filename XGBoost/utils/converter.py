@@ -29,15 +29,14 @@ class Converter():
 
 
     def tfvectorize(self,words,test=None):
+        for unit in words.values.astype('U'):
+            print(unit)
+            s = input()
         v = TfidfVectorizer(binary=False,decode_error='ignore',stop_words='english')
         if test == None:
-            print('train tf-idf')
-            print("sadad")
             data = v.fit_transform(words.values.astype('U'))
-            print("#@###")
             dump('ckpt/tfidf2.model',v)
         else:
-            print('load tf -idf')
             v = undump('ckpt/tfidf2.model')
             data = v.transform(words.values.astype('U'))
         return data
